@@ -1,3 +1,6 @@
-const User = require('./User');
+// To require models files all together and export it
 
-module.exports = { User };
+const User = require('./User');
+const Post = require('./Post')
+
+module.exports = { User, Post };
