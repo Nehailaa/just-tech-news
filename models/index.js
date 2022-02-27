@@ -1,18 +1,43 @@
-// To require models files all together and export it
-
+// import all models
+const Post = require('./Post');
 const User = require('./User');
-const Post = require('./Post')
+const Vote = require('./Vote');
 
-// Create associations as we have a one-to-many relationship;
-// A user can make many posts. But a post only belongs to a single user, and never many users
+// create associations
 User.hasMany(Post, {
-    foreignKey: 'user_id'
+  foreignKey: 'user_id'
 });
 
-// In this statement, we defining the relationship of the Post model to the User. 
-// The constraint we impose here is that a post can belong to one user, but not many users.
 Post.belongsTo(User, {
-    foreignKey: 'user_id',
+  foreignKey: 'user_id'
 });
 
-module.exports = { User, Post };
+User.belongsToMany(Post, {
+  through: Vote,
+  as: 'voted_posts',
+  foreignKey: 'user_id'
+});
+
+Post.belongsToMany(User, {
+  through: Vote,
+  as: 'voted_posts',
+  foreignKey: 'post_id'
+});
+
+Vote.belongsTo(User, {
+  foreignKey: 'user_id'
+});
+
+Vote.belongsTo(Post, {
+  foreignKey: 'post_id'
+});
+
+User.hasMany(Vote, {
+  foreignKey: 'user_id'
+});
+
+Post.hasMany(Vote, {
+  foreignKey: 'post_id'
+});
+
+module.exports = { User, Post, Vote };
